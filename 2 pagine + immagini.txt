@@ -1,0 +1,149 @@
+esphome:
+  name: ttgo
+  friendly_name: TTgo
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+logger:
+
+
+api:
+  encryption:
+    key: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+ota:
+  password: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+wifi:
+  ssid: XXXXXXXXXXXXXXXXXXXXXXXX
+  password: XXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+  ap:
+    ssid: "Ttgo Fallback Hotspot"
+    password: "WRcHzri9cvYV"
+
+captive_portal:
+
+
+spi:
+  clk_pin: GPIO18
+  mosi_pin: GPIO19
+
+
+        
+
+sensor:
+  - platform: homeassistant
+    id: val_1
+    entity_id: counter.acqua_piccolo
+
+  - platform: homeassistant
+    id: val_2
+    entity_id: counter.acqua_grande
+
+  - platform: homeassistant
+    id: val_3
+    entity_id: sensor.somma_litri_no_decimali
+ 
+  - platform: homeassistant
+    id: val_4
+    entity_id: sensor.temp_esterna_temperature
+
+  
+font:
+  - file: "fonts/Roboto-Medium.ttf"
+    id: tnr1
+    size: 20
+
+  - file: "fonts/Helvetica.ttf"
+    id: tnr2
+    size: 24
+
+  - file: "fonts/slant.ttf"
+    id: tnr3
+    size: 35  
+
+  - file: "fonts/sthupo.ttf"
+    id: tnr4
+    size: 35   
+
+color:
+  - id: RED
+    red: 100%
+    green: 0%
+    blue: 0%
+
+  - id: BLUE
+    red: 0%
+    green: 0%
+    blue: 100%
+
+  - id: BLUEHA
+    hex: 00bcf1
+
+  - id: WHITE
+    red: 100%
+    green: 100%
+    blue: 100%
+
+  - id: GREEN
+    red: 0%
+    green: 100%
+    blue: 0%
+
+  - id: GRIGIO
+    red: 50%
+    green: 50%
+    blue: 50%
+
+  - id: YELLOW
+    red: 100%
+    green: 100%
+    blue: 0%
+
+image:
+  - file: "immagini/home.png"
+    id: my_image
+    type: RGB565
+    resize: 50x50
+
+interval:
+  - interval: 8s
+    then:
+      - display.page.show_next: my_display
+      - component.update: my_display
+
+
+display:
+  - platform: st7789v
+    id: my_display
+    model: TTGO TDisplay 135x240
+    backlight_pin: GPIO4
+    cs_pin: GPIO5
+    dc_pin: GPIO16
+    reset_pin: GPIO23
+    rotation: 90°
+    #brightness: 0.5
+    update_interval: 5s
+    pages:
+      - id: page1
+        lambda: |-
+          it.print(9, 6, id(tnr3), GREEN, "Dispenser");
+          it.print(4,  45, id(tnr1), GRIGIO, TextAlign::LEFT, "Piccolo:");  
+          it.print(4,  75, id(tnr1), GRIGIO, TextAlign::LEFT, "Grande:");
+          it.print(40,  105, id(tnr2), RED, TextAlign::LEFT, "Litri Totali Erogati");
+          it.print(175,  45, id(tnr1), GRIGIO, TextAlign::LEFT, "Temp:");
+          it.printf(80, 45, id(tnr1), BLUE, "%.0f", id(val_1).state);
+          it.printf(80, 75, id(tnr1), BLUE, "%.0f", id(val_2).state);
+          it.printf(4, 105, id(tnr2), RED, "%.0f", id(val_3).state);
+          it.printf(180, 75, id(tnr1), YELLOW, "%.0f°C", id(val_4).state);
+      - id: page2
+        lambda: |-
+          it.print(75, 4, id(tnr4), BLUEHA, "FDXX");
+          // Draw the image my_image at position [x=0,y=0]
+          it.image(95, 43, id(my_image));
+          it.print(75, 100, id(tnr4), BLUEHA, "HOME");
