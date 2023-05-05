@@ -1,2 +1,10 @@
 # TTGO-Display-Home-assistant-ESPHome
-dalla a alla z
+
+
+CREARE UN DISPLAY TTGO CHE LEGGA DEI VALORI SU HOME ASSISTANT E LI VISUALIZZI
+
+OCCORRENTE:
+- HOME ASSISTANT
+- ESP HOME
+- TTGO Diplay (amazon o aliexp)
+
